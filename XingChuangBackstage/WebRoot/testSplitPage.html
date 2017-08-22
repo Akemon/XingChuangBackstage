@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>无标题文档</title>
+    <link rel="stylesheet"
+          href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script
+            src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script
+            src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="jquery/jquery-1.11.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+//            alert($("#test").html());
+            //	alert($("#pageSize").val());
+        });
+
+        function priviousPage() {
+            var currentPage = $("#pageNumber").html();
+            if (currentPage == '1') {
+                alert("当前已经是第1页");
+                return;
+            }
+            $("#pageNumber").html(currentPage - 1);
+        }
+        function nextPage() {
+            var allDataNumber = $("#allDataNumber").html();
+            var currentPage = $("#pageNumber").html();
+            if (currentPage == allDataNumber) {
+                alert("当前已经是最后一页");
+                return;
+            }
+            $("#pageNumber").html(currentPage * 1 + 1);
+
+        }
+        function changePageNum() {
+            var reg = new RegExp("^[0-9]*$");
+            var toPage = $("#pageNum").val();
+            var max = $("#allDataNumber").html();
+            var min = '0';
+            if (toPage*1 > max*1 || min*1 >= toPage*1) {
+                alert("超出范围！！！");
+                $("#pageNum").val("");
+                return;
+            }
+            if(!reg.test(toPage)){
+                alert("请输入数字！！！");
+                $("#pageNum").val("");
+                return;
+            }
+            $("#pageNumber").html(toPage);
+            $("#pageNum").val("");
+        }
+        function modifyData(id) {
+            var trContent =$("#"+id).parent().parent();
+            var number =trContent.eq(0).find("td.td1").text();
+            var name =trContent.eq(0).find("td.td2").text();
+            $("#number").val(number);
+            $("#name").val(name);
+        }
+
+
+    </script>
+</head>
+
+<body>
+
+<!-- 搜索区域 -->
+<div class="row" style="padding-bottom: 20px;margin-top:20px;">
+    <!-- 搜索框的长度为该行的3/4 -->
+    <div class="col-md-9">
+        <div class="input-group">
+            <input id="searchString" type="text" style="height:28px;"
+                   class="form-control" placeholder="请输入实体名"> <span
+                class="input-group-btn">
+						<button type="button" class="btn btn-info" onclick="search()"
+                                onkeypress="Enter()">
+							<span class="glyphicon glyphicon-search" aria-hidden="true"/> 搜索
+						</button>
+				</span>
+        </div>
+    </div>
+</div>
+
+<!-- 表格显示 -->
+<div class="row">
+    <div class="col-md-12" style="margin-top:20px;">
+        <div class="panel panel-info">
+            <div class="panel-heading">学生违纪信息</div>
+            <table id="table"
+                   class="table table-striped table-bordered table-hover datatable">
+                <thead id="tem">
+                <th >学号</th>
+                <th >姓名</th>
+                <th >考试科目</th>
+                <th >考场号</th>
+                <th >班级</th>
+                <th >监考人员</th>
+                <th >修改</th>
+                <th>删除</th>
+                </thead>
+                <tbody id="content">
+                <tr id="tr1">
+                    <td class="td1">15240065</td>
+                    <td class="td2">呵呵哒</td>
+                    <td class="td3">理科</td>
+                    <td class="td4">456 </td>
+                    <td class="td5">计科</td>
+                    <td class="td6">小明</td>
+                    <td >
+                        <button id="modify1" type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" onclick="modifyData(this.id)" >
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                    </td>
+                    <td>
+                        <button id="delete1" type="button" class="btn btn-default" onclick="deleteData(this.id)">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+
+                <tr id ="tr2">
+                    <td class="td1">15240066</td>
+                    <td class="td2">asd</td>
+                    <td class="td3">afsd</td>
+                    <td class="td4">4asdf</td>
+                    <td class="td5">计sadf</td>
+                    <td class="td6"> 小明</td>
+                    <td>
+                        <button id ="modify2"  class="btn btn-default" data-toggle="modal" data-target="#myModal" onclick="modifyData(this.id)">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                    </td>
+                    <td>
+                        <button id="delete2" type="button" class="btn btn-default" onclick="deleteData(this.id)">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 页面底部显示 -->
+
+<div style="float:left;margin-top:25px">
+    <label>
+        每页显示
+        <select id="pageSize"
+                aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+            <option selected="selected" value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        条记录
+    </label>
+
+    <label style="margin-left: 10px">总共有 </label>
+    <span id="allDataNumber">57</span>
+    <label>条数据 </label>
+    <label style="margin-left: 10px"> 当前是第</label>
+    <span id="pageNumber">57</span>页
+
+
+</div>
+
+<div style="width: 300px;height:100px;float: left;">
+
+    <ul class="pager">
+        <li><a onclick="priviousPage();">上一页</a></li>
+        <li><a onclick="nextPage();">下一页</a></li>
+        <li>跳转到</li>
+        <input id="pageNum" type="text" style="width: 40px">
+        <button class="label label-info" style="font-size: 15px" onclick="changePageNum();">go</button>
+
+    </ul>
+
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改学生信息
+                </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="number" class="col-sm-2 control-label">学号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="number" >
+                        <p> </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" >
+                        <p> </p>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="modal-footer" style="margin-top: 100px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary">
+                    确定更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+</html>
